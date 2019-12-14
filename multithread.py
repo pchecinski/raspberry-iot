@@ -3,7 +3,6 @@ import threading
 import serial
 import json
 import time
-import sys
 import Adafruit_DHT
 import pymongo
 import requests 
@@ -13,18 +12,13 @@ from glob import glob
 from datetime import datetime
 from db import collection
 
-if len(sys.argv) != 3:
-    print("Podaj współrzędne GPS jako parametry!")
-    exit()
+from settings import api_url, lattitude, longitude
 
 thetime = datetime.now()
 
 DHT_PIN = 4  # GPIO PIN
 DHT_SENSOR = Adafruit_DHT.AM2302  # sensor type
 LOOP_DELAY = 30  # seconds
-API_URL = 'https://api.checinski.dev' # API ARMAG
-LAT = sys.argv[1] 
-LON = sys.argv[2]
 
 print(f"AM2302 Reader started on {str(thetime)} on pin {str(DHT_PIN)}")
 
@@ -45,7 +39,7 @@ class serialReadThread(threading.Thread):
 
         while serial_run:
             line = ser.readline()
-            data = line.strip().decode('utf-8')
+            data = line.strip().decode('utf-8').replace("pm2.5", "pm25")
         
             if data and 'pm' in data:
                 lock.acquire()
@@ -63,11 +57,8 @@ try:
         time.sleep(LOOP_DELAY)
 
         humidity, temperature = Adafruit_DHT.read_retry(sensor=DHT_SENSOR, pin=DHT_PIN)
-        #print('Date: ' + str(datetime.now()) +
-        #      ' Temp: {0:0.1f} C  Humidity: {1:0.1f} %'.format(temperature, humidity))
 
-
-        r = requests.get(f"{API_URL}/{LAT}/{LON}")
+        r = requests.get(f"{api_url}/{lattitude}/{longitude}")
         api_data = {}
 
         if r.status_code == 200:
@@ -80,11 +71,11 @@ try:
                 "temperature": temperature, 
                 "type": DHT_SENSOR,
             },
-            #"air": serial_data,
+            "air": serial_data,
             "api_data": api_data,
             "gps": {
-                "lat": sys.argv[1],
-                "lon": sys.argv[2]
+                "lat": lattitude,
+                "lon": longitude
             }
         }
         
