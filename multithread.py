@@ -45,7 +45,7 @@ class serialReadThread(threading.Thread):
                 lock.acquire()
                 serial_data = json.loads(data)
                 serial_data['time']=str(datetime.now())
-                print(f"serial data: {str(serial_data)}")
+                # print(f"serial data: {str(serial_data)}")
                 lock.release()
 
 serialRead = serialReadThread()
@@ -79,7 +79,7 @@ try:
             }
         }
         
-        print(info)
+        # print(info)
         collection.insert_one(info)
 
 except (KeyboardInterrupt):
