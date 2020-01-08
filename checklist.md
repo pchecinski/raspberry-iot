@@ -1,4 +1,4 @@
-Checklist for fresh Raspbian instalation:
+# Checklist for fresh Raspbian instalation:
 #### Initial setup
 * [x] set up wifi using `sudo raspi-config`
 * [x] turn on SSH server using `sudo raspi-config`
