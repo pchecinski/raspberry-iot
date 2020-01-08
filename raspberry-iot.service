@@ -1,0 +1,18 @@
+[Unit]
+Description=Rasberry IOT Service
+After=syslog.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+WorkingDirectory=/opt/raspberry-iot/
+ExecStart=/opt/raspberry-iot/multithread.py
+StandardOutput=syslog
+StandardError=syslog
+RemainAfterExit=no
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
