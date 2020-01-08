@@ -1,8 +1,8 @@
 import pymongo
 from datetime import datetime
-from settings import username, password, database
+from settings import username, password, database, hostname
 
-client = pymongo.MongoClient(f'mongodb://{username}:{password}@mongo.checinski.dev:27017/{database}')
+client = pymongo.MongoClient(f'mongodb://{username}:{password}@{hostname}:27017/{database}')
 raspberrydb = client[database]
 collection = raspberrydb["pidata"]
 
